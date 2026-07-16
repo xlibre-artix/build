@@ -7,191 +7,254 @@ on:
   workflow_dispatch:
     inputs:
       force-build:
-       description: Force the build of all packages
-       type: boolean
-       default: false
+        description: Force the build of all packages
+        type: boolean
+        default: false
+      branch:
+        description: The branch to build
+        type: choice
+        options:
+          - master
+          - oldstable
+        default: master
+
+env:
+  CARCH: x86_64
 
 jobs:
+  _setup:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/draft-release
+        with:
+          branch: ${{ inputs.branch }}
+          force-build: ${{ inputs.force-build }}
+          app-client-id: ${{ vars.APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
   xlibre-input-elographics:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-input-elographics
+      package: xlibre-input-elographics
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-evdev:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-input-evdev
+      package: xlibre-input-evdev
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-libinput:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-input-libinput
+      package: xlibre-input-libinput
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-synaptics:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-input-synaptics
+      package: xlibre-input-synaptics
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-vmmouse:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-input-vmmouse
+      package: xlibre-input-vmmouse
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-void:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-input-void
+      package: xlibre-input-void
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-wacom:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-input-wacom
+      package: xlibre-input-wacom
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-meta:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-input-libinput
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-meta
+      package: xlibre-meta
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-amdgpu:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-amdgpu
+      package: xlibre-video-amdgpu
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-ati:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-ati
+      package: xlibre-video-ati
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-dummy:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-dummy
+      package: xlibre-video-dummy
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-fbdev:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-fbdev
+      package: xlibre-video-fbdev
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-intel:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-intel
+      package: xlibre-video-intel
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-nouveau:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-nouveau
+      package: xlibre-video-nouveau
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-qxl:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-qxl
+      package: xlibre-video-qxl
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-sisusb:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-sisusb
+      package: xlibre-video-sisusb
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-vesa:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-vesa
+      package: xlibre-video-vesa
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-vmware:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-vmware
+      package: xlibre-video-vmware
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-voodoo:
     uses: ./.github/workflows/build-package.yml
     needs:
+      - _setup
       - xlibre-xserver
     with:
-      repository: ${{ github.repository_owner }}/xlibre-video-voodoo
+      package: xlibre-video-voodoo
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-xserver:
     uses: ./.github/workflows/build-package.yml
+    needs:
+      - _setup
     with:
-      repository: ${{ github.repository_owner }}/xlibre-xserver
+      package: xlibre-xserver
+      branch: ${{ inputs.branch }}
       force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   all-packages:
+    runs-on: ubuntu-24.04
     needs:
       - xlibre-input-elographics
       - xlibre-input-evdev
@@ -213,21 +276,12 @@ jobs:
       - xlibre-video-vmware
       - xlibre-video-voodoo
       - xlibre-xserver
-    runs-on: ubuntu-slim
     steps:
-      - name: All built
-        run: echo 'all built'
-
-  publish:
-    needs: all-packages
-    if: ${{ 0 == 1 }}
-    runs-on: ubuntu-slim
-    steps:
-      - name: Authenticate via app
-        id: app-token
-        if: ${{ vars.APP_CLIENT_ID }}
-        uses: actions/create-github-app-token@v3
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/release-packages
         with:
-          client-id: ${{ vars.APP_CLIENT_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          repository: ${{ vars.PACKAGES_REPOSITORY }}
+          branch: ${{ inputs.branch }}
+          repo-db-prefix: ${{ vars.REPO_DB_PREFIX }}
+          app-client-id: ${{ vars.APP_CLIENT_ID }}
+          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
