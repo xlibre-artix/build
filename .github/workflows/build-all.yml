@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# SPDX-FileCopyrightText: 2026 callmetango for XLibre
+# SPDX-FileCopyrightInfo: 2026 callmetango for XLibre
 
 name: Build All and Publish
 
@@ -16,24 +16,36 @@ on:
         options:
           - beta
           - master
-          - oldstable
         default: master
 
-env:
-  CARCH: x86_64
+defaults:
+  run:
+    shell: sh
 
 jobs:
   _setup:
     runs-on: ubuntu-24.04
+    outputs:
+      packages: ${{ steps.setup.outputs.packages }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/draft-release
+      - name: Setup workspace
+        uses: callmetango/setup-workspace@HEAD
         with:
-          branch: ${{ inputs.branch }}
-          force-build: ${{ inputs.force-build }}
-          app-client-id: ${{ vars.APP_CLIENT_ID }}
-          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          inputs: ${{ toJSON(inputs) }}
+          vars: ${{ toJSON(vars) }}
+
+      - name: Setup next release
+        id: setup
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+        run: |
+          . setup-build-env.sh
+          setup-next-release.sh "$BINPKGS_REPO" "$STAGING_TAG" "$FORCE_BUILD"
+
   xlibre-input-elographics:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-input-elographics')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -41,10 +53,12 @@ jobs:
     with:
       package: xlibre-input-elographics
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-evdev:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-input-evdev')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -52,10 +66,12 @@ jobs:
     with:
       package: xlibre-input-evdev
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-libinput:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-input-libinput')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -63,10 +79,12 @@ jobs:
     with:
       package: xlibre-input-libinput
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-synaptics:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-input-synaptics')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -74,10 +92,12 @@ jobs:
     with:
       package: xlibre-input-synaptics
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-vmmouse:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-input-vmmouse')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -85,10 +105,12 @@ jobs:
     with:
       package: xlibre-input-vmmouse
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-void:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-input-void')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -96,10 +118,12 @@ jobs:
     with:
       package: xlibre-input-void
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-input-wacom:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-input-wacom')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -107,10 +131,12 @@ jobs:
     with:
       package: xlibre-input-wacom
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-meta:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-meta')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -119,10 +145,12 @@ jobs:
     with:
       package: xlibre-meta
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-amdgpu:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-amdgpu')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -130,10 +158,12 @@ jobs:
     with:
       package: xlibre-video-amdgpu
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-ati:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-ati')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -141,10 +171,12 @@ jobs:
     with:
       package: xlibre-video-ati
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-dummy:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-dummy')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -152,10 +184,12 @@ jobs:
     with:
       package: xlibre-video-dummy
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-fbdev:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-fbdev')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -163,10 +197,12 @@ jobs:
     with:
       package: xlibre-video-fbdev
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-intel:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-intel')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -174,10 +210,12 @@ jobs:
     with:
       package: xlibre-video-intel
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-nouveau:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-nouveau')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -185,10 +223,12 @@ jobs:
     with:
       package: xlibre-video-nouveau
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-qxl:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-qxl')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -196,10 +236,12 @@ jobs:
     with:
       package: xlibre-video-qxl
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-sisusb:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-sisusb')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -207,10 +249,12 @@ jobs:
     with:
       package: xlibre-video-sisusb
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-vesa:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-vesa')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -218,10 +262,12 @@ jobs:
     with:
       package: xlibre-video-vesa
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-vmware:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-vmware')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -229,10 +275,12 @@ jobs:
     with:
       package: xlibre-video-vmware
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-video-voodoo:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-video-voodoo')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
@@ -240,20 +288,23 @@ jobs:
     with:
       package: xlibre-video-voodoo
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   xlibre-xserver:
+    if: |
+      !failure() && !cancelled() &&
+      contains(fromJSON(needs._setup.outputs.packages), 'xlibre-xserver')
     uses: ./.github/workflows/build-package.yml
     needs:
       - _setup
     with:
       package: xlibre-xserver
       branch: ${{ inputs.branch }}
-      force-build: ${{ inputs.force-build }}
     secrets: inherit
 
   all-packages:
+    if: |
+      !cancelled() && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-24.04
     needs:
       - xlibre-input-elographics
@@ -277,11 +328,17 @@ jobs:
       - xlibre-video-voodoo
       - xlibre-xserver
     steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/release-packages
+      - name: Setup workspace
+        uses: callmetango/setup-workspace@HEAD
         with:
-          repository: ${{ vars.PACKAGES_REPOSITORY }}
-          branch: ${{ inputs.branch }}
-          repo-db-prefix: ${{ vars.REPO_DB_PREFIX }}
-          app-client-id: ${{ vars.APP_CLIENT_ID }}
-          app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          inputs: ${{ toJSON(inputs) }}
+          vars: ${{ toJSON(vars) }}
+
+      - name: Release new release
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+        run: |
+          create_pkgdb=1; delete_source=1
+          . setup-build-env.sh
+          copy-release.sh "$BINPKGS_REPO" "$STAGING_TAG" \
+              "$BINPKGS_REPO" "$RELEASED_TAG" $create_pkgdb $delete_source
