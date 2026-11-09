@@ -10,6 +10,7 @@ on:
         description: The repository to promote the packages from
         type: choice
         options:
+          - oldstable-testing
           - stable-testing
         default: stable-testing
 
